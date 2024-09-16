@@ -63,18 +63,18 @@ def mostrarMaquinariaParaAlquiler():
             print("Nombre: ", maquinasHerramientas[i][0])
             print("Tipo: ", maquinasHerramientas[i][1])
             print("Precio de alquiler: ", maquinasHerramientas[i][2])
-
+    print("**********************************************************")
 
 #MOSTRAR HERRAMIENTAS ORDENADAS
 def mostrarHerramientas(lst):
-    os.system('cls')
-    print("HERRAMIENTAS ORDENADAS POR PRECIO DE ALQUILER: ")
     for i in range(len(lst)):
         if lst[i][1] == "Herramienta":
             print("**********************************************************")
             print("Nombre: ", lst[i][0])
             print("Tipo: ", lst[i][1])
             print("Precio de alquiler: ", lst[i][2])
+            print("Disponible: ", lst[i][3])
+    print("**********************************************************")
 #ORDENAR HERRAMIENTAS POR PRECIO DE ALQUILER
 def ordenarPorPrecio(lst):
     n = len(lst)
@@ -89,12 +89,11 @@ def ordenarPorPrecio(lst):
             lst[j] = tmp
         gap = gap // 2
     mostrarHerramientas(lst)
-
+    print("HERRAMIENTAS ORDENADAS POR PRECIO DE ALQUILER: ")
 
 #REALIZAR PRESUPUESTO
 def realizarPresupuesto():
     mostrarMaquinariaParaAlquiler()
-    print("**********************************************************")
     maquina = input("Ingrese el nombre de la maquinaria/herramienta que desea alquilar: ")
     dias = int(input("Ingrese la cantidad de días que desea alquilar la maquinaria/herramienta: "))
     for i in range(len(maquinasHerramientas)):
@@ -105,12 +104,42 @@ def realizarPresupuesto():
             if(op == "S" or op == "s"):
                 maquinasHerramientas[i][3] = False
                 print("Alquiler realizado con éxito")
-                break
+                return
             else:
                 print("Alquiler cancelado")
-                break
-    print("No se encontró la maquinaria/herramienta ingresada")
-        
+                return
+    
+    print("Maquinaria/herramienta no encontrada")
+
+#ACTUALIZAR PRECIOS
+def actualizarPrecios(lst):
+    porcentaje = float(input("Ingrese el porcentaje de aumento: (0.1 - 0.9): "))
+    if porcentaje < 0.1 or porcentaje > 0.9:
+        print("Porcentaje inválido")
+    else:
+        for i in range(len(lst)):
+            lst[i][2] = lst[i][2] + (lst[i][2] * porcentaje)
+        print("Precios actualizados con éxito")
+        for i in range(len(lst)):
+            print("---------------------------------------------")
+            print("Nombre: ", lst[i][0], " Precio: ", lst[i][2], " Disponible: ", lst[i][3])
+        print("---------------------------------------------")
+        sumar(lst, 0)
+        sumar(lst, 1)
+    return lst
+#SUMAR PRECIOS
+def sumar(lst, tipo):
+    suma = 0
+    for i in range(len(lst)):
+        if lst[i][3] and tipo == 0:
+            suma += lst[i][2]
+        elif not lst[i][3] and tipo == 1:
+            suma += lst[i][2]
+    if tipo == 0:
+        print("La suma actualizada de los precios de productos disponibles es de: ", suma)
+    elif tipo == 1:
+        print("La suma actualizada de los precios de productos no disponibles es de: ", suma)
+
 # PRINCIPAL
 os.system('cls')
 maquinasHerramientas = [["Taladro", "Herramienta", 150.0, True], 
@@ -140,7 +169,8 @@ while(opcion != 6):
         realizarPresupuesto()
         presionarTecla()
     elif(opcion == 5):
-        print("Actualizar precios")
+        maquinasHerramientas = actualizarPrecios(maquinasHerramientas)
+        presionarTecla()
     else:
         print("Opción inválida")
         presionarTecla()
